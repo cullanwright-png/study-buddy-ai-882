@@ -54,10 +54,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                   Start Study Session
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant="hero" 
                   size="lg"
                   onClick={() => onNavigate('assignments')}
-                  className="border-white/30 text-white hover:bg-white/10"
                 >
                   <Calendar className="mr-2 h-5 w-5" />
                   View Assignments
