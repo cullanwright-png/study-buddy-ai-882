@@ -18,6 +18,9 @@ import {
   Zap
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import StudyFlashcards from './StudyFlashcards';
+import StudyQuiz from './StudyQuiz';
+import StudyGuideGenerator from './StudyGuideGenerator';
 
 interface ChatMessage {
   id: string;
@@ -40,6 +43,8 @@ const AIAssistant: React.FC = () => {
 
   const [studyTopic, setStudyTopic] = useState('');
   const [notesContent, setNotesContent] = useState('');
+  const [activeStudyTool, setActiveStudyTool] = useState<'flashcards' | 'quiz' | 'guide' | null>(null);
+  const [studyToolTopic, setStudyToolTopic] = useState('');
 
   const quickPrompts = [
     { 
@@ -118,20 +123,66 @@ const AIAssistant: React.FC = () => {
   };
 
   const generateAIResponse = (question: string) => {
-    // Simple mock responses - in real app this would connect to an AI API
-    if (question.toLowerCase().includes('photosynthesis')) {
+    const lowerQuestion = question.toLowerCase();
+    
+    // Science responses
+    if (lowerQuestion.includes('photosynthesis')) {
       return "Photosynthesis is how plants make their own food! Think of it like cooking with sunlight. Plants take in carbon dioxide from the air, water from their roots, and use sunlight as energy to create glucose (sugar) and oxygen. The equation is: 6CO₂ + 6H₂O + sunlight → C₆H₁₂O₆ + 6O₂. The chloroplasts in leaves are like tiny solar-powered kitchens doing this amazing process!";
     }
     
-    if (question.toLowerCase().includes('quadratic')) {
+    if (lowerQuestion.includes('mitosis')) {
+      return "Mitosis is cell division that creates two identical cells! Remember PMAT: Prophase (chromosomes condense), Metaphase (chromosomes line up in the middle), Anaphase (chromosomes pull apart), Telophase (two nuclei form). It's like making a perfect copy of yourself!";
+    }
+    
+    if (lowerQuestion.includes('atom') || lowerQuestion.includes('electron')) {
+      return "Atoms are like tiny universes! The nucleus (protons + neutrons) is at the center, with electrons orbiting in shells. Think of it like planets around the sun. Electrons determine chemical behavior - they're the 'social butterflies' that interact with other atoms!";
+    }
+    
+    // Math responses
+    if (lowerQuestion.includes('quadratic')) {
       return "Quadratic equations have the form ax² + bx + c = 0. Think of them as U-shaped curves called parabolas! The quadratic formula x = (-b ± √(b²-4ac))/2a helps you find where the parabola crosses the x-axis. Here's a tip: the discriminant (b²-4ac) tells you how many solutions you'll get. Positive = 2 solutions, zero = 1 solution, negative = no real solutions.";
     }
-
-    if (question.toLowerCase().includes('schedule') || question.toLowerCase().includes('plan')) {
-      return "Great idea! Here's a study schedule framework: 1) List all your subjects and upcoming exams 2) Prioritize by difficulty and exam dates 3) Use time-blocking: assign specific hours to each subject 4) Include breaks every 25-50 minutes 5) Review sessions before each exam 6) Keep one day for catch-up. Would you like me to help create a specific schedule for your subjects?";
+    
+    if (lowerQuestion.includes('derivative') || lowerQuestion.includes('calculus')) {
+      return "Derivatives measure how fast something changes! Think of it as the 'speedometer' of functions. If f(x) represents distance, then f'(x) is velocity. Basic rules: d/dx(x²) = 2x, d/dx(sin x) = cos x. The power rule (d/dx(xⁿ) = nxⁿ⁻¹) is your best friend!";
+    }
+    
+    if (lowerQuestion.includes('pythagorean') || lowerQuestion.includes('triangle')) {
+      return "The Pythagorean theorem: a² + b² = c² for right triangles! Think of it as the 'triangle recipe'. If you know two sides, you can always find the third. It's everywhere - from construction to GPS systems. Remember: it only works for RIGHT triangles!";
+    }
+    
+    // History responses
+    if (lowerQuestion.includes('world war') || lowerQuestion.includes('wwii')) {
+      return "WWII (1939-1945) was a global conflict involving most nations. Key causes: Treaty of Versailles aftermath, economic depression, rise of fascism. Major events: Pearl Harbor (1941), D-Day (1944), Holocaust, atomic bombs (1945). It reshaped the modern world order.";
+    }
+    
+    if (lowerQuestion.includes('constitution') || lowerQuestion.includes('amendment')) {
+      return "The U.S. Constitution is our supreme law, established in 1787. It has three branches: Legislative (makes laws), Executive (enforces laws), Judicial (interprets laws). The Bill of Rights (first 10 amendments) protects individual freedoms like speech, religion, and due process.";
+    }
+    
+    // English/Literature responses
+    if (lowerQuestion.includes('shakespeare') || lowerQuestion.includes('hamlet')) {
+      return "Shakespeare's Hamlet explores themes of revenge, madness, and moral uncertainty. Key quote: 'To be or not to be' reflects Hamlet's internal struggle. The play uses dramatic irony - we know things characters don't. Look for symbols like the ghost (guilt/past) and Yorick's skull (mortality).";
+    }
+    
+    if (lowerQuestion.includes('essay') || lowerQuestion.includes('writing')) {
+      return "Strong essays have clear structure: Introduction (hook + thesis), Body paragraphs (topic sentence + evidence + analysis), Conclusion (restate thesis + broader implications). Remember PEEL: Point, Evidence, Explain, Link. Always cite sources and vary sentence structure!";
+    }
+    
+    // Study strategies
+    if (lowerQuestion.includes('schedule') || lowerQuestion.includes('plan')) {
+      return "Great idea! Here's a study schedule framework: 1) List all subjects and upcoming exams 2) Prioritize by difficulty and exam dates 3) Use time-blocking: assign specific hours to each subject 4) Include breaks every 25-50 minutes 5) Review sessions before each exam 6) Keep one day for catch-up. Would you like me to help create a specific schedule for your subjects?";
+    }
+    
+    if (lowerQuestion.includes('memory') || lowerQuestion.includes('remember')) {
+      return "Memory techniques that work: 1) Spaced repetition (review at increasing intervals) 2) Create acronyms or mnemonics 3) Connect new info to what you know 4) Teach it to someone else 5) Use multiple senses (visual, auditory) 6) Get enough sleep - that's when memories consolidate!";
+    }
+    
+    if (lowerQuestion.includes('focus') || lowerQuestion.includes('concentrate')) {
+      return "Boost focus with these strategies: 1) Remove distractions (phone, social media) 2) Use Pomodoro Technique (25 min work, 5 min break) 3) Find your peak energy time 4) Create a dedicated study space 5) Take care of basics: sleep, food, hydration 6) Try background music or white noise if it helps!";
     }
 
-    return "That's a great question! I'd love to help you understand this better. Could you provide a bit more context about what specifically you'd like to know? I can explain concepts, create study materials, or help with problem-solving strategies.";
+    return "That's a great question! I'd love to help you understand this better. Could you provide a bit more context about what specifically you'd like to know? I can explain concepts, create study materials, or help with problem-solving strategies. Try asking about specific topics like 'photosynthesis', 'quadratic equations', or 'essay writing'!";
   };
 
   const handleQuickPrompt = (prompt: string) => {
@@ -140,10 +191,31 @@ const AIAssistant: React.FC = () => {
   };
 
   const handleToolAction = (toolTitle: string) => {
-    toast({
-      title: `${toolTitle} Coming Soon! 🚀`,
-      description: "This feature is being developed to make your studying even more effective.",
-    });
+    if (!studyTopic.trim()) {
+      toast({
+        title: "Enter a Topic First",
+        description: "Please enter a study topic in the 'Generate Materials' tab to use study tools.",
+        variant: "destructive"
+      });
+      setActiveTab('generate');
+      return;
+    }
+
+    setStudyToolTopic(studyTopic);
+    
+    if (toolTitle === 'Flashcards Generator') {
+      setActiveStudyTool('flashcards');
+    } else if (toolTitle === 'Quiz Creator') {
+      setActiveStudyTool('quiz');
+    } else if (toolTitle === 'Study Guide') {
+      setActiveStudyTool('guide');
+    } else if (toolTitle === 'Concept Explainer') {
+      // Enhanced concept explanation in chat
+      const explanation = `Let me explain ${studyTopic} in detail:`;
+      setChatMessage(`Explain ${studyTopic} in simple terms with examples`);
+      handleSendMessage();
+      setActiveTab('chat');
+    }
   };
 
   const handleGenerateStudyMaterial = (type: string) => {
@@ -156,11 +228,62 @@ const AIAssistant: React.FC = () => {
       return;
     }
 
-    toast({
-      title: `${type} Generated! 📚`,
-      description: `Study materials for "${studyTopic}" are ready.`,
-    });
+    setStudyToolTopic(studyTopic);
+    
+    if (type === 'Flashcards') {
+      setActiveStudyTool('flashcards');
+    } else if (type === 'Quiz') {
+      setActiveStudyTool('quiz');
+    } else if (type === 'Summary') {
+      setActiveStudyTool('guide');
+    }
   };
+
+  const handleNotesEnhancement = () => {
+    if (!notesContent.trim()) {
+      toast({
+        title: "Enter Notes Content",
+        description: "Please paste some notes to enhance them.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Enhanced notes processing
+    const enhancedMessage = `Please enhance and explain these study notes with additional details and examples:\n\n${notesContent}`;
+    
+    setChatMessage(enhancedMessage);
+    setActiveTab('chat');
+    
+    // Clear the textarea and show success
+    setTimeout(() => {
+      handleSendMessage();
+      setNotesContent('');
+      toast({
+        title: "Notes Enhanced! ✨",
+        description: "Check the chat for your enhanced notes with explanations.",
+      });
+    }, 100);
+  };
+
+  // Handle study tool navigation
+  if (activeStudyTool && studyToolTopic) {
+    const handleCloseTool = () => {
+      setActiveStudyTool(null);
+      setStudyToolTopic('');
+    };
+
+    switch (activeStudyTool) {
+      case 'flashcards':
+        return <StudyFlashcards topic={studyToolTopic} onClose={handleCloseTool} />;
+      case 'quiz':
+        return <StudyQuiz topic={studyToolTopic} onClose={handleCloseTool} />;
+      case 'guide':
+        return <StudyGuideGenerator topic={studyToolTopic} onClose={handleCloseTool} />;
+      default:
+        break;
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -391,10 +514,7 @@ const AIAssistant: React.FC = () => {
                 className="min-h-32"
               />
               <Button 
-                onClick={() => toast({
-                  title: "Notes Enhanced! ✨",
-                  description: "Your notes have been improved with additional explanations.",
-                })}
+                onClick={handleNotesEnhancement}
                 disabled={!notesContent.trim()}
                 className="w-full"
               >
