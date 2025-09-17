@@ -9,14 +9,17 @@ import Dashboard from "@/components/Dashboard";
 import AssignmentTracker from "@/components/AssignmentTracker";
 import PomodoroTimer from "@/components/PomodoroTimer";
 import ProgressDashboard from "@/components/ProgressDashboard";
-
 import MotivationCorner from "@/components/MotivationCorner";
+import FloatingTimer from "@/components/FloatingTimer";
+import { TimerProvider, useTimer } from "@/hooks/useTimer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+const AppContent = () => {
   const [currentSection, setCurrentSection] = useState('dashboard');
+  const [showFloatingTimer, setShowFloatingTimer] = useState(false);
+  const { isActive, timeLeft } = useTimer();
 
   const renderCurrentSection = () => {
     switch (currentSection) {
@@ -35,29 +38,51 @@ const App = () => {
     }
   };
 
+  // Show floating timer when not on timer page and timer is running or has been started
+  const shouldShowFloatingTimer = currentSection !== 'pomodoro' && (isActive || timeLeft < 25 * 60) && showFloatingTimer;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation 
+        currentSection={currentSection} 
+        onNavigate={(section) => {
+          // Show floating timer when leaving timer page if timer was started
+          if (currentSection === 'pomodoro' && section !== 'pomodoro' && (isActive || timeLeft < 25 * 60)) {
+            setShowFloatingTimer(true);
+          }
+          setCurrentSection(section);
+        }} 
+      />
+      {renderCurrentSection()}
+      
+      {shouldShowFloatingTimer && (
+        <FloatingTimer
+          onClose={() => setShowFloatingTimer(false)}
+          onMaximize={() => {
+            setCurrentSection('pomodoro');
+            setShowFloatingTimer(false);
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route 
-              path="/" 
-              element={
-                <div className="min-h-screen bg-background">
-                  <Navigation 
-                    currentSection={currentSection} 
-                    onNavigate={setCurrentSection} 
-                  />
-                  {renderCurrentSection()}
-                </div>
-              } 
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <TimerProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<AppContent />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TimerProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
