@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   Plus, 
@@ -16,7 +18,10 @@ import {
   CheckCircle2, 
   Clock,
   Filter,
-  Search
+  Search,
+  Edit,
+  Trash2,
+  MoreVertical
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -76,8 +81,10 @@ const AssignmentTracker: React.FC = () => {
   ]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingAssignment, setEditingAssignment] = useState<Assignment | null>(null);
 
   const [newAssignment, setNewAssignment] = useState<Partial<Assignment>>({
     title: '',
@@ -140,6 +147,70 @@ const AssignmentTracker: React.FC = () => {
         description: `You completed "${assignment.title}"`,
       });
     }
+  };
+
+  const handleEditAssignment = (assignment: Assignment) => {
+    setEditingAssignment(assignment);
+    setNewAssignment({
+      title: assignment.title,
+      subject: assignment.subject,
+      description: assignment.description,
+      dueDate: assignment.dueDate,
+      priority: assignment.priority,
+      type: assignment.type
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateAssignment = () => {
+    if (!newAssignment.title || !newAssignment.subject || !newAssignment.dueDate || !editingAssignment) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const updatedAssignment: Assignment = {
+      ...editingAssignment,
+      title: newAssignment.title!,
+      subject: newAssignment.subject!,
+      description: newAssignment.description || '',
+      dueDate: newAssignment.dueDate!,
+      priority: newAssignment.priority as 'low' | 'medium' | 'high',
+      type: newAssignment.type as 'homework' | 'test' | 'project' | 'quiz'
+    };
+
+    setAssignments(assignments.map(assignment => 
+      assignment.id === editingAssignment.id ? updatedAssignment : assignment
+    ));
+
+    setNewAssignment({
+      title: '',
+      subject: '',
+      description: '',
+      dueDate: '',
+      priority: 'medium',
+      type: 'homework'
+    });
+    setEditingAssignment(null);
+    setIsEditDialogOpen(false);
+    
+    toast({
+      title: "Assignment Updated! ✏️",
+      description: "Your assignment has been successfully updated.",
+    });
+  };
+
+  const handleDeleteAssignment = (id: string) => {
+    const assignment = assignments.find(a => a.id === id);
+    setAssignments(assignments.filter(assignment => assignment.id !== id));
+    
+    toast({
+      title: "Assignment Deleted 🗑️",
+      description: `"${assignment?.title}" has been removed from your tracker.`,
+    });
   };
 
   const getDaysUntilDue = (dueDate: string) => {
@@ -337,6 +408,94 @@ const AssignmentTracker: React.FC = () => {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Edit Assignment Dialog */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Assignment</DialogTitle>
+                <DialogDescription>
+                  Update your assignment details
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="edit-title">Title *</Label>
+                  <Input
+                    id="edit-title"
+                    placeholder="Assignment title"
+                    value={newAssignment.title}
+                    onChange={(e) => setNewAssignment({...newAssignment, title: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-subject">Subject *</Label>
+                  <Input
+                    id="edit-subject"
+                    placeholder="e.g., Mathematics, English"
+                    value={newAssignment.subject}
+                    onChange={(e) => setNewAssignment({...newAssignment, subject: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-description">Description</Label>
+                  <Textarea
+                    id="edit-description"
+                    placeholder="Assignment details"
+                    value={newAssignment.description}
+                    onChange={(e) => setNewAssignment({...newAssignment, description: e.target.value})}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-dueDate">Due Date *</Label>
+                    <Input
+                      id="edit-dueDate"
+                      type="date"
+                      value={newAssignment.dueDate}
+                      onChange={(e) => setNewAssignment({...newAssignment, dueDate: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-priority">Priority</Label>
+                    <Select 
+                      value={newAssignment.priority} 
+                      onValueChange={(value) => setNewAssignment({...newAssignment, priority: value as any})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="edit-type">Type</Label>
+                  <Select 
+                    value={newAssignment.type} 
+                    onValueChange={(value) => setNewAssignment({...newAssignment, type: value as any})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="homework">Homework</SelectItem>
+                      <SelectItem value="test">Test</SelectItem>
+                      <SelectItem value="project">Project</SelectItem>
+                      <SelectItem value="quiz">Quiz</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={handleUpdateAssignment} className="w-full">
+                  Update Assignment
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -397,6 +556,44 @@ const AssignmentTracker: React.FC = () => {
                           <Badge variant={getPriorityColor(assignment.priority)}>
                             {assignment.priority}
                           </Badge>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleEditAssignment(assignment)}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete Assignment</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete "{assignment.title}"? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction 
+                                      onClick={() => handleDeleteAssignment(assignment.id)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                       <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-2">
