@@ -9,7 +9,7 @@ import Dashboard from "@/components/Dashboard";
 import AssignmentTracker from "@/components/AssignmentTracker";
 import PomodoroTimer from "@/components/PomodoroTimer";
 import ProgressDashboard from "@/components/ProgressDashboard";
-import AIAssistant from "@/components/AIAssistant";
+
 import MotivationCorner from "@/components/MotivationCorner";
 import NotFound from "./pages/NotFound";
 
@@ -28,8 +28,6 @@ const App = () => {
         return <PomodoroTimer />;
       case 'progress':
         return <ProgressDashboard />;
-      case 'ai-assistant':
-        return <AIAssistant />;
       case 'motivation':
         return <MotivationCorner />;
       default:

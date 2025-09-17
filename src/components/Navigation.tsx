@@ -26,7 +26,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
     { id: 'assignments', label: 'Assignments', icon: Calendar, badge: '3' },
     { id: 'pomodoro', label: 'Study Timer', icon: Clock, badge: null },
     { id: 'progress', label: 'Progress', icon: BarChart3, badge: null },
-    { id: 'ai-assistant', label: 'AI Helper', icon: Brain, badge: 'New' },
+    
     { id: 'motivation', label: 'Motivation', icon: Heart, badge: null },
   ];
 
