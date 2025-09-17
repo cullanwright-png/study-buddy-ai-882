@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from '@/components/ui/progress';
 import { 
   Plus, 
   Calendar, 
@@ -250,6 +251,7 @@ const AssignmentTracker: React.FC = () => {
   const completedCount = assignments.filter(a => a.completed).length;
   const pendingCount = assignments.filter(a => !a.completed).length;
   const overdueCount = assignments.filter(a => !a.completed && getDaysUntilDue(a.dueDate) < 0).length;
+  const completionPercentage = assignments.length > 0 ? Math.round((completedCount / assignments.length) * 100) : 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -261,6 +263,28 @@ const AssignmentTracker: React.FC = () => {
         <p className="text-muted-foreground mb-6">
           Stay organized and never miss a deadline again
         </p>
+
+        {/* Progress Bar */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold">Overall Progress</h3>
+            <span className="text-sm font-medium text-muted-foreground">
+              {completedCount} of {assignments.length} completed ({completionPercentage}%)
+            </span>
+          </div>
+          <Progress 
+            value={completionPercentage} 
+            className="h-3 bg-muted"
+          />
+          {completionPercentage === 100 && assignments.length > 0 && (
+            <div className="mt-2 p-3 bg-gradient-success/10 border border-success/20 rounded-lg">
+              <div className="flex items-center space-x-2 text-success">
+                <CheckCircle2 className="w-5 h-5" />
+                <span className="font-medium">🎉 Congratulations! All assignments completed!</span>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
