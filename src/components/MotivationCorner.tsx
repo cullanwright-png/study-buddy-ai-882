@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,11 +14,19 @@ import {
   Sun,
   Moon,
   Coffee,
-  Music
+  Music,
+  Play,
+  Pause,
+  Square
 } from 'lucide-react';
 
 const MotivationCorner: React.FC = () => {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [activeExercise, setActiveExercise] = useState<number | null>(null);
+  const [exercisePhase, setExercisePhase] = useState<string>('');
+  const [exerciseTimer, setExerciseTimer] = useState(0);
+  const [isExerciseRunning, setIsExerciseRunning] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const motivationalQuotes = [
     {
@@ -176,19 +184,34 @@ const MotivationCorner: React.FC = () => {
       name: "4-7-8 Breathing",
       description: "Inhale for 4, hold for 7, exhale for 8. Great for reducing anxiety before exams.",
       duration: "2-3 minutes",
-      benefit: "Reduces stress"
+      benefit: "Reduces stress",
+      pattern: [
+        { phase: "Inhale", duration: 4 },
+        { phase: "Hold", duration: 7 },
+        { phase: "Exhale", duration: 8 }
+      ]
     },
     {
       name: "Box Breathing",
       description: "Inhale for 4, hold for 4, exhale for 4, hold for 4. Perfect for focus.",
       duration: "3-5 minutes", 
-      benefit: "Improves focus"
+      benefit: "Improves focus",
+      pattern: [
+        { phase: "Inhale", duration: 4 },
+        { phase: "Hold", duration: 4 },
+        { phase: "Exhale", duration: 4 },
+        { phase: "Hold", duration: 4 }
+      ]
     },
     {
       name: "Simple Deep Breathing",
       description: "Take slow, deep breaths through your nose and out through your mouth.",
       duration: "1-2 minutes",
-      benefit: "Quick energy boost"
+      benefit: "Quick energy boost",
+      pattern: [
+        { phase: "Inhale", duration: 4 },
+        { phase: "Exhale", duration: 6 }
+      ]
     }
   ];
 
@@ -219,6 +242,54 @@ const MotivationCorner: React.FC = () => {
       (prevIndex + 1) % motivationalQuotes.length
     );
   };
+
+  const startBreathingExercise = (exerciseIndex: number) => {
+    if (activeExercise === exerciseIndex && isExerciseRunning) {
+      // Stop the exercise
+      setIsExerciseRunning(false);
+      setActiveExercise(null);
+      setExercisePhase('');
+      setExerciseTimer(0);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
+    setActiveExercise(exerciseIndex);
+    setIsExerciseRunning(true);
+    startExerciseTimer(exerciseIndex);
+  };
+
+  const startExerciseTimer = (exerciseIndex: number) => {
+    const exercise = breathingExercises[exerciseIndex];
+    let currentPhaseIndex = 0;
+    let phaseTimeLeft = exercise.pattern[currentPhaseIndex].duration;
+    
+    setExercisePhase(exercise.pattern[currentPhaseIndex].phase);
+    setExerciseTimer(phaseTimeLeft);
+
+    timerRef.current = setInterval(() => {
+      phaseTimeLeft--;
+      setExerciseTimer(phaseTimeLeft);
+
+      if (phaseTimeLeft <= 0) {
+        currentPhaseIndex = (currentPhaseIndex + 1) % exercise.pattern.length;
+        phaseTimeLeft = exercise.pattern[currentPhaseIndex].duration;
+        setExercisePhase(exercise.pattern[currentPhaseIndex].phase);
+        setExerciseTimer(phaseTimeLeft);
+      }
+    }, 1000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
   const currentQuote = motivationalQuotes[currentQuoteIndex];
 
@@ -336,14 +407,33 @@ const MotivationCorner: React.FC = () => {
                       <Badge variant="secondary">{exercise.benefit}</Badge>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground">{exercise.description}</p>
+                  <p className="text-sm text-muted-foreground mb-3">{exercise.description}</p>
+                  
+                  {activeExercise === index && isExerciseRunning && (
+                    <div className="mb-4 p-3 bg-primary/5 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-primary mb-1">{exerciseTimer}</div>
+                      <div className="text-lg font-medium text-primary/80 capitalize">{exercisePhase}</div>
+                      <div className="text-xs text-muted-foreground mt-1">Follow the rhythm</div>
+                    </div>
+                  )}
+                  
                   <Button 
-                    variant="outline" 
+                    variant={activeExercise === index && isExerciseRunning ? "destructive" : "outline"}
                     size="sm" 
-                    className="mt-3"
-                    onClick={() => {/* Would implement timer here */}}
+                    className="w-full"
+                    onClick={() => startBreathingExercise(index)}
                   >
-                    Start Exercise
+                    {activeExercise === index && isExerciseRunning ? (
+                      <>
+                        <Square className="w-4 h-4 mr-2" />
+                        Stop Exercise
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-4 h-4 mr-2" />
+                        Start Exercise
+                      </>
+                    )}
                   </Button>
                 </div>
               ))}
