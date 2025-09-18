@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useTimer } from '@/hooks/useTimer';
 import { 
   Play, 
@@ -13,10 +15,20 @@ import {
   Clock, 
   Coffee,
   Target,
-  BarChart3
+  BarChart3,
+  Edit,
+  Save,
+  X
 } from 'lucide-react';
 
 const PomodoroTimer: React.FC = () => {
+  const [isEditingDurations, setIsEditingDurations] = useState(false);
+  const [tempDurations, setTempDurations] = useState({
+    work: 25,
+    'short-break': 5,
+    'long-break': 15
+  });
+  
   const {
     timeLeft,
     isActive,
@@ -34,6 +46,7 @@ const PomodoroTimer: React.FC = () => {
     getSessionColor,
     getSessionIcon,
     sessionDurations,
+    updateSessionDuration,
   } = useTimer();
 
   const subjects = [
@@ -57,6 +70,26 @@ const PomodoroTimer: React.FC = () => {
       default:
         return 'Timer';
     }
+  };
+
+  const handleEditDurations = () => {
+    setTempDurations({
+      work: Math.floor(sessionDurations.work / 60),
+      'short-break': Math.floor(sessionDurations['short-break'] / 60),
+      'long-break': Math.floor(sessionDurations['long-break'] / 60)
+    });
+    setIsEditingDurations(true);
+  };
+
+  const handleSaveDurations = () => {
+    updateSessionDuration('work', tempDurations.work);
+    updateSessionDuration('short-break', tempDurations['short-break']);
+    updateSessionDuration('long-break', tempDurations['long-break']);
+    setIsEditingDurations(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingDurations(false);
   };
 
   return (
@@ -155,21 +188,21 @@ const PomodoroTimer: React.FC = () => {
                     variant={sessionType === 'work' ? 'default' : 'outline'}
                     size="sm"
                   >
-                    Work (25m)
+                    Work ({Math.floor(sessionDurations.work / 60)}m)
                   </Button>
                   <Button
                     onClick={() => switchSession('short-break')}
                     variant={sessionType === 'short-break' ? 'default' : 'outline'}
                     size="sm"
                   >
-                    Short Break (5m)
+                    Short Break ({Math.floor(sessionDurations['short-break'] / 60)}m)
                   </Button>
                   <Button
                     onClick={() => switchSession('long-break')}
                     variant={sessionType === 'long-break' ? 'default' : 'outline'}
                     size="sm"
                   >
-                    Long Break (15m)
+                    Long Break ({Math.floor(sessionDurations['long-break'] / 60)}m)
                   </Button>
                 </div>
               </div>
@@ -220,33 +253,120 @@ const PomodoroTimer: React.FC = () => {
             {/* Session Lengths */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Settings className="w-5 h-5" />
-                  <span>Session Lengths</span>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Settings className="w-5 h-5" />
+                    <span>Session Lengths</span>
+                  </div>
+                  {!isEditingDurations ? (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleEditDurations}
+                      disabled={isActive}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                  ) : (
+                    <div className="flex space-x-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={handleSaveDurations}
+                      >
+                        <Save className="w-4 h-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={handleCancelEdit}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-red-500" />
-                    <span className="text-sm">Work Session</span>
-                  </div>
-                  <span className="text-sm font-medium">25 minutes</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <Coffee className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Short Break</span>
-                  </div>
-                  <span className="text-sm font-medium">5 minutes</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <Coffee className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm">Long Break</span>
-                  </div>
-                  <span className="text-sm font-medium">15 minutes</span>
-                </div>
+                {!isEditingDurations ? (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-red-500" />
+                        <span className="text-sm">Work Session</span>
+                      </div>
+                      <span className="text-sm font-medium">{Math.floor(sessionDurations.work / 60)} minutes</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-2">
+                        <Coffee className="w-4 h-4 text-green-500" />
+                        <span className="text-sm">Short Break</span>
+                      </div>
+                      <span className="text-sm font-medium">{Math.floor(sessionDurations['short-break'] / 60)} minutes</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-2">
+                        <Coffee className="w-4 h-4 text-blue-500" />
+                        <span className="text-sm">Long Break</span>
+                      </div>
+                      <span className="text-sm font-medium">{Math.floor(sessionDurations['long-break'] / 60)} minutes</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="work-duration" className="flex items-center space-x-2 text-sm">
+                        <Clock className="w-4 h-4 text-red-500" />
+                        <span>Work Session (minutes)</span>
+                      </Label>
+                      <Input
+                        id="work-duration"
+                        type="number"
+                        min="1"
+                        max="120"
+                        value={tempDurations.work}
+                        onChange={(e) => setTempDurations(prev => ({
+                          ...prev,
+                          work: parseInt(e.target.value) || 1
+                        }))}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="short-break-duration" className="flex items-center space-x-2 text-sm">
+                        <Coffee className="w-4 h-4 text-green-500" />
+                        <span>Short Break (minutes)</span>
+                      </Label>
+                      <Input
+                        id="short-break-duration"
+                        type="number"
+                        min="1"
+                        max="30"
+                        value={tempDurations['short-break']}
+                        onChange={(e) => setTempDurations(prev => ({
+                          ...prev,
+                          'short-break': parseInt(e.target.value) || 1
+                        }))}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="long-break-duration" className="flex items-center space-x-2 text-sm">
+                        <Coffee className="w-4 h-4 text-blue-500" />
+                        <span>Long Break (minutes)</span>
+                      </Label>
+                      <Input
+                        id="long-break-duration"
+                        type="number"
+                        min="1"
+                        max="60"
+                        value={tempDurations['long-break']}
+                        onChange={(e) => setTempDurations(prev => ({
+                          ...prev,
+                          'long-break': parseInt(e.target.value) || 1
+                        }))}
+                      />
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>

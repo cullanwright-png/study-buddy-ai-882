@@ -24,6 +24,7 @@ interface TimerContextType {
   getSessionColor: () => string;
   getSessionIcon: () => string;
   sessionDurations: Record<'work' | 'short-break' | 'long-break', number>;
+  updateSessionDuration: (type: 'work' | 'short-break' | 'long-break', minutes: number) => void;
 }
 
 const TimerContext = createContext<TimerContextType | undefined>(undefined);
@@ -47,14 +48,13 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const [totalFocusTime, setTotalFocusTime] = useState(0);
   const [selectedSubject, setSelectedSubject] = useState('General Study');
-  
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  const sessionDurations = {
+  const [sessionDurations, setSessionDurations] = useState({
     work: 25 * 60,
     'short-break': 5 * 60,
     'long-break': 15 * 60,
-  };
+  });
+  
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isActive && timeLeft > 0) {
@@ -180,6 +180,19 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
     }
   };
 
+  const updateSessionDuration = (type: 'work' | 'short-break' | 'long-break', minutes: number) => {
+    const seconds = minutes * 60;
+    setSessionDurations(prev => ({
+      ...prev,
+      [type]: seconds
+    }));
+    
+    // If we're updating the current session type and timer isn't running, update the current timer
+    if (type === sessionType && !isActive) {
+      setTimeLeft(seconds);
+    }
+  };
+
   const value = {
     timeLeft,
     isActive,
@@ -197,6 +210,7 @@ export const TimerProvider: React.FC<TimerProviderProps> = ({ children }) => {
     getSessionColor,
     getSessionIcon,
     sessionDurations,
+    updateSessionDuration,
   };
 
   return (
