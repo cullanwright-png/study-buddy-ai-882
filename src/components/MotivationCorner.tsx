@@ -60,6 +60,91 @@ const MotivationCorner: React.FC = () => {
       text: "Study while others are sleeping; work while others are loafing; prepare while others are playing.",
       author: "William A. Ward",
       category: "Dedication"
+    },
+    {
+      text: "Education is the most powerful weapon which you can use to change the world.",
+      author: "Nelson Mandela",
+      category: "Education"
+    },
+    {
+      text: "The beautiful thing about learning is that no one can take it away from you.",
+      author: "B.B. King",
+      category: "Learning"
+    },
+    {
+      text: "Intelligence plus character—that is the goal of true education.",
+      author: "Martin Luther King Jr.",
+      category: "Education"
+    },
+    {
+      text: "Success is where preparation and opportunity meet.",
+      author: "Bobby Unser",
+      category: "Preparation"
+    },
+    {
+      text: "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice.",
+      author: "Brian Herbert",
+      category: "Learning"
+    },
+    {
+      text: "Knowledge is power. Information is liberating.",
+      author: "Kofi Annan",
+      category: "Knowledge"
+    },
+    {
+      text: "The roots of education are bitter, but the fruit is sweet.",
+      author: "Aristotle",
+      category: "Education"
+    },
+    {
+      text: "Learning never exhausts the mind.",
+      author: "Leonardo da Vinci",
+      category: "Learning"
+    },
+    {
+      text: "The more that you read, the more things you will know. The more that you learn, the more places you'll go.",
+      author: "Dr. Seuss",
+      category: "Reading"
+    },
+    {
+      text: "Success is the sum of small efforts repeated day in and day out.",
+      author: "Robert Collier",
+      category: "Consistency"
+    },
+    {
+      text: "What we learn with pleasure we never forget.",
+      author: "Alfred Mercier",
+      category: "Learning"
+    },
+    {
+      text: "An investment in knowledge pays the best interest.",
+      author: "Benjamin Franklin",
+      category: "Knowledge"
+    },
+    {
+      text: "Study hard, for the well is deep, and our brains are shallow.",
+      author: "Richard Baxter",
+      category: "Study"
+    },
+    {
+      text: "The expert in anything was once a beginner who refused to give up.",
+      author: "Helen Hayes",
+      category: "Perseverance"
+    },
+    {
+      text: "Champions aren't made in the gyms. Champions are made from something deep inside them—a desire, a dream, a vision.",
+      author: "Muhammad Ali",
+      category: "Motivation"
+    },
+    {
+      text: "Believe you can and you're halfway there.",
+      author: "Theodore Roosevelt",
+      category: "Belief"
+    },
+    {
+      text: "The only impossible journey is the one you never begin.",
+      author: "Tony Robbins",
+      category: "Beginning"
     }
   ];
 
