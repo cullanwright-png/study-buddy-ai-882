@@ -22,6 +22,7 @@ import {
 
 const MotivationCorner: React.FC = () => {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const [activeExercise, setActiveExercise] = useState<number | null>(null);
   const [exercisePhase, setExercisePhase] = useState<string>('');
   const [exerciseTimer, setExerciseTimer] = useState(0);
@@ -176,6 +177,26 @@ const MotivationCorner: React.FC = () => {
       icon: <Music className="w-5 h-5 text-primary" />,
       title: "Environment Matters",
       tip: "Create a dedicated study space. Your brain will associate this area with focus and learning."
+    },
+    {
+      icon: <Zap className="w-5 h-5 text-secondary" />,
+      title: "Active Recall",
+      tip: "Test yourself frequently instead of just re-reading notes. Quiz yourself or explain concepts out loud."
+    },
+    {
+      icon: <Trophy className="w-5 h-5 text-accent" />,
+      title: "Reward System",
+      tip: "Set up small rewards for completing study sessions. This builds positive associations with learning."
+    },
+    {
+      icon: <Calendar className="w-5 h-5 text-primary" />,
+      title: "Time Blocking",
+      tip: "Schedule specific time blocks for different subjects. This prevents decision fatigue and improves focus."
+    },
+    {
+      icon: <Heart className="w-5 h-5 text-warning" />,
+      title: "Stay Hydrated", 
+      tip: "Keep water nearby while studying. Even mild dehydration can significantly impact cognitive performance."
     }
   ];
 
@@ -291,6 +312,38 @@ const MotivationCorner: React.FC = () => {
     };
   }, []);
 
+  // Study tip rotation every 24 hours
+  useEffect(() => {
+    const initializeTipRotation = () => {
+      const lastTipRotation = localStorage.getItem('lastTipRotation');
+      const savedTipIndex = localStorage.getItem('currentTipIndex');
+      const currentTime = Date.now();
+      const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+      if (lastTipRotation && savedTipIndex) {
+        const timeSinceLastRotation = currentTime - parseInt(lastTipRotation);
+        
+        if (timeSinceLastRotation >= twentyFourHours) {
+          // 24 hours have passed, rotate to next tip
+          const newTipIndex = (parseInt(savedTipIndex) + 1) % studyTips.length;
+          setCurrentTipIndex(newTipIndex);
+          localStorage.setItem('currentTipIndex', newTipIndex.toString());
+          localStorage.setItem('lastTipRotation', currentTime.toString());
+        } else {
+          // Use saved tip index
+          setCurrentTipIndex(parseInt(savedTipIndex));
+        }
+      } else {
+        // First time initialization
+        setCurrentTipIndex(0);
+        localStorage.setItem('currentTipIndex', '0');
+        localStorage.setItem('lastTipRotation', currentTime.toString());
+      }
+    };
+
+    initializeTipRotation();
+  }, [studyTips.length]);
+
   const currentQuote = motivationalQuotes[currentQuoteIndex];
 
   return (
@@ -365,24 +418,30 @@ const MotivationCorner: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-primary" />
-                Study Success Tips
+                Daily Study Tip
               </CardTitle>
               <CardDescription>
-                Proven strategies to boost your learning effectiveness
+                A new proven strategy every 24 hours to boost your learning
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {studyTips.map((tip, index) => (
-                <div key={index} className="flex items-start space-x-4 p-4 bg-muted/30 rounded-lg">
-                  <div className="flex-shrink-0">
-                    {tip.icon}
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">{tip.title}</h4>
-                    <p className="text-sm text-muted-foreground">{tip.tip}</p>
+            <CardContent>
+              <div className="flex items-start space-x-4 p-6 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg border border-primary/10">
+                <div className="flex-shrink-0 p-2 bg-primary/10 rounded-full">
+                  {studyTips[currentTipIndex].icon}
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-lg mb-2 text-primary">
+                    {studyTips[currentTipIndex].title}
+                  </h4>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {studyTips[currentTipIndex].tip}
+                  </p>
+                  <div className="mt-3 flex items-center text-xs text-muted-foreground">
+                    <Calendar className="w-3 h-3 mr-1" />
+                    New tip every 24 hours • Tip {currentTipIndex + 1} of {studyTips.length}
                   </div>
                 </div>
-              ))}
+              </div>
             </CardContent>
           </Card>
 
