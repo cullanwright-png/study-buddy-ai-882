@@ -136,4 +136,35 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Layout-specific styles */
+  body.layout-compact .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  body.layout-compact .space-y-8 > * + * {
+    margin-top: 1.5rem !important;
+  }
+  
+  body.layout-compact .p-6 {
+    padding: 1rem !important;
+  }
+  
+  body.layout-compact .p-4 {
+    padding: 0.75rem !important;
+  }
+
+  body.layout-minimal .shadow-soft,
+  body.layout-minimal .shadow-medium,
+  body.layout-minimal .shadow-strong {
+    box-shadow: none !important;
+  }
+  
+  body.layout-minimal .border {
+    border: 1px solid hsl(var(--border) / 0.3) !important;
+  }
+  
+  body.layout-minimal .bg-gradient-to-br {
+    background: hsl(var(--card)) !important;
+  }
 }

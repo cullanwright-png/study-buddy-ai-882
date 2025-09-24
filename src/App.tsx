@@ -10,8 +10,10 @@ import AssignmentTracker from "@/components/AssignmentTracker";
 import PomodoroTimer from "@/components/PomodoroTimer";
 import ProgressDashboard from "@/components/ProgressDashboard";
 import MotivationCorner from "@/components/MotivationCorner";
+import Settings from "@/components/Settings";
 import FloatingTimer from "@/components/FloatingTimer";
 import { TimerProvider, useTimer } from "@/hooks/useTimer";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const AppContent = () => {
         return <ProgressDashboard />;
       case 'motivation':
         return <MotivationCorner />;
+      case 'settings':
+        return <Settings />;
       default:
         return <Dashboard onNavigate={setCurrentSection} />;
     }
@@ -72,17 +76,19 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <TimerProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<AppContent />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TimerProvider>
+        <ThemeProvider>
+          <TimerProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<AppContent />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TimerProvider>
+        </ThemeProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
