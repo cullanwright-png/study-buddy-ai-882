@@ -14,7 +14,147 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      canvas_assignments: {
+        Row: {
+          canvas_assignment_id: string
+          canvas_course_id: string
+          created_at: string | null
+          description: string | null
+          due_at: string | null
+          id: string
+          name: string
+          points_possible: number | null
+          submission_types: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          canvas_assignment_id: string
+          canvas_course_id: string
+          created_at?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          name: string
+          points_possible?: number | null
+          submission_types?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          canvas_assignment_id?: string
+          canvas_course_id?: string
+          created_at?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          name?: string
+          points_possible?: number | null
+          submission_types?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      canvas_courses: {
+        Row: {
+          canvas_course_id: string
+          course_code: string | null
+          created_at: string | null
+          end_at: string | null
+          id: string
+          name: string
+          start_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          canvas_course_id: string
+          course_code?: string | null
+          created_at?: string | null
+          end_at?: string | null
+          id?: string
+          name: string
+          start_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          canvas_course_id?: string
+          course_code?: string | null
+          created_at?: string | null
+          end_at?: string | null
+          id?: string
+          name?: string
+          start_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      canvas_settings: {
+        Row: {
+          canvas_url: string
+          created_at: string | null
+          id: string
+          last_synced_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          canvas_url: string
+          created_at?: string | null
+          id?: string
+          last_synced_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          canvas_url?: string
+          created_at?: string | null
+          id?: string
+          last_synced_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      canvas_submissions: {
+        Row: {
+          canvas_assignment_id: string
+          created_at: string | null
+          grade: string | null
+          id: string
+          score: number | null
+          submitted_at: string | null
+          updated_at: string | null
+          user_id: string
+          workflow_state: string | null
+        }
+        Insert: {
+          canvas_assignment_id: string
+          created_at?: string | null
+          grade?: string | null
+          id?: string
+          score?: number | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id: string
+          workflow_state?: string | null
+        }
+        Update: {
+          canvas_assignment_id?: string
+          created_at?: string | null
+          grade?: string | null
+          id?: string
+          score?: number | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+          workflow_state?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
