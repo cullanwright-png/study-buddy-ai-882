@@ -8,6 +8,7 @@ import Navigation from "@/components/Navigation";
 import Dashboard from "@/components/Dashboard";
 import AssignmentTracker from "@/components/AssignmentTracker";
 import PomodoroTimer from "@/components/PomodoroTimer";
+import Grades from "@/components/Grades";
 import ProgressDashboard from "@/components/ProgressDashboard";
 import MotivationCorner from "@/components/MotivationCorner";
 import Settings from "@/components/Settings";
@@ -31,6 +32,8 @@ const AppContent = () => {
         return <AssignmentTracker />;
       case 'pomodoro':
         return <PomodoroTimer />;
+      case 'grades':
+        return <Grades />;
       case 'progress':
         return <ProgressDashboard />;
       case 'motivation':

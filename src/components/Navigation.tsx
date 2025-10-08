@@ -10,7 +10,8 @@ import {
   Heart,
   Settings,
   Menu,
-  X
+  X,
+  GraduationCap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -26,6 +27,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
     { id: 'dashboard', label: 'Dashboard', icon: Home, badge: null },
     { id: 'assignments', label: 'Assignments', icon: Calendar, badge: '3' },
     { id: 'pomodoro', label: 'Study Timer', icon: Clock, badge: null },
+    { id: 'grades', label: 'Grades', icon: GraduationCap, badge: null },
     { id: 'progress', label: 'Progress', icon: BarChart3, badge: null },
     { id: 'motivation', label: 'Motivation', icon: Heart, badge: null },
     { id: 'settings', label: 'Customize', icon: Settings, badge: null },
