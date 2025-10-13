@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Palette, 
   Layout, 
@@ -11,9 +12,11 @@ import {
   Grid3X3,
   Sidebar,
   Minimize2,
-  Square
+  Square,
+  BookOpen
 } from 'lucide-react';
 import { useTheme, colorThemes, layoutOptions } from '@/contexts/ThemeContext';
+import CanvasSettings from './CanvasSettings';
 
 const Settings: React.FC = () => {
   const { colorTheme, layout, setColorTheme, setLayout, resetToDefaults } = useTheme();
@@ -32,14 +35,30 @@ const Settings: React.FC = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
-          Customize Your Experience
+          Settings
         </h1>
         <p className="text-muted-foreground">
-          Personalize StudyBuddy to match your style and workflow preferences
+          Manage your Canvas integration and customize your experience
         </p>
       </div>
 
-      <div className="space-y-8">
+      <Tabs defaultValue="canvas" className="space-y-8">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="canvas" className="flex items-center gap-2">
+            <BookOpen className="w-4 h-4" />
+            Canvas Integration
+          </TabsTrigger>
+          <TabsTrigger value="appearance" className="flex items-center gap-2">
+            <Palette className="w-4 h-4" />
+            Appearance
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="canvas" className="space-y-6">
+          <CanvasSettings />
+        </TabsContent>
+
+        <TabsContent value="appearance" className="space-y-8">
         {/* Color Themes */}
         <Card className="shadow-medium">
           <CardHeader>
@@ -219,7 +238,8 @@ const Settings: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

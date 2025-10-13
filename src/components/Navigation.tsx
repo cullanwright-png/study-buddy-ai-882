@@ -11,9 +11,12 @@ import {
   Settings,
   Menu,
   X,
-  GraduationCap
+  GraduationCap,
+  LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 interface NavigationProps {
   currentSection: string;
@@ -22,6 +25,24 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: 'Signed out successfully',
+        description: 'See you next time!',
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error signing out',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, badge: null },
@@ -93,9 +114,15 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
 
             {/* User Profile */}
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-accent rounded-full flex items-center justify-center">
-                <span className="text-sm font-bold text-white">S</span>
-              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="hover:bg-destructive/10 hover:text-destructive"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
             </div>
           </div>
         </div>
@@ -172,6 +199,18 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
                   </Button>
                 );
               })}
+              
+              <div className="pt-4 border-t border-border">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="w-full justify-start h-12 hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <LogOut className="w-5 h-5 mr-3" />
+                  Sign Out
+                </Button>
+              </div>
             </div>
           </div>
         )}
