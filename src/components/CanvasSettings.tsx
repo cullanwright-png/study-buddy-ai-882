@@ -5,9 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { RefreshCw, ExternalLink, CheckCircle2, AlertCircle } from 'lucide-react';
+import { RefreshCw, ExternalLink, CheckCircle2, AlertCircle, LogOut } from 'lucide-react';
 import { useCanvasSettings, useSaveCanvasSettings, useSyncCanvas } from '@/hooks/useCanvasData';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 const CanvasSettings: React.FC = () => {
   const { data: settings, isLoading } = useCanvasSettings();
@@ -34,6 +36,24 @@ const CanvasSettings: React.FC = () => {
   const lastSynced = settings?.last_synced_at
     ? format(new Date(settings.last_synced_at), 'PPpp')
     : 'Never';
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: 'Signed out successfully',
+        description: 'See you next time!',
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error signing out',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -143,6 +163,18 @@ const CanvasSettings: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      <div className="flex justify-end">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleSignOut}
+          className="text-xs hover:bg-destructive/10 hover:text-destructive"
+        >
+          <LogOut className="w-3 h-3 mr-1.5" />
+          Sign Out
+        </Button>
+      </div>
     </div>
   );
 };
