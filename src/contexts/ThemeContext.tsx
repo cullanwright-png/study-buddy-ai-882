@@ -113,6 +113,104 @@ export const colorThemes: ColorTheme[] = [
       successLight: '135 75% 55%',
       warning: '35 100% 50%',
     }
+  },
+  {
+    id: 'cherry-blossom',
+    name: 'Cherry Blossom',
+    colors: {
+      primary: '330 80% 65%',
+      primaryLight: '335 90% 75%',
+      primaryDark: '325 70% 55%',
+      accent: '350 85% 60%',
+      accentLight: '355 90% 70%',
+      success: '155 70% 45%',
+      successLight: '160 75% 60%',
+      warning: '40 95% 50%',
+    }
+  },
+  {
+    id: 'midnight-purple',
+    name: 'Midnight Purple',
+    colors: {
+      primary: '270 90% 60%',
+      primaryLight: '275 95% 70%',
+      primaryDark: '265 85% 50%',
+      accent: '290 85% 65%',
+      accentLight: '295 90% 75%',
+      success: '140 75% 45%',
+      successLight: '145 80% 60%',
+      warning: '45 95% 50%',
+    }
+  },
+  {
+    id: 'citrus-burst',
+    name: 'Citrus Burst',
+    colors: {
+      primary: '55 100% 55%',
+      primaryLight: '60 100% 65%',
+      primaryDark: '50 90% 45%',
+      accent: '35 100% 60%',
+      accentLight: '40 100% 70%',
+      success: '140 75% 45%',
+      successLight: '145 80% 60%',
+      warning: '25 100% 50%',
+    }
+  },
+  {
+    id: 'coral-reef',
+    name: 'Coral Reef',
+    colors: {
+      primary: '10 85% 60%',
+      primaryLight: '15 90% 70%',
+      primaryDark: '5 80% 50%',
+      accent: '180 75% 55%',
+      accentLight: '185 80% 65%',
+      success: '160 70% 45%',
+      successLight: '165 75% 60%',
+      warning: '45 95% 50%',
+    }
+  },
+  {
+    id: 'lavender-dream',
+    name: 'Lavender Dream',
+    colors: {
+      primary: '255 85% 70%',
+      primaryLight: '260 90% 80%',
+      primaryDark: '250 80% 60%',
+      accent: '275 80% 65%',
+      accentLight: '280 85% 75%',
+      success: '150 70% 45%',
+      successLight: '155 75% 60%',
+      warning: '45 95% 50%',
+    }
+  },
+  {
+    id: 'emerald-forest',
+    name: 'Emerald Forest',
+    colors: {
+      primary: '160 85% 40%',
+      primaryLight: '165 90% 55%',
+      primaryDark: '155 80% 30%',
+      accent: '120 80% 50%',
+      accentLight: '125 85% 65%',
+      success: '140 75% 45%',
+      successLight: '145 80% 60%',
+      warning: '45 95% 50%',
+    }
+  },
+  {
+    id: 'berry-blast',
+    name: 'Berry Blast',
+    colors: {
+      primary: '315 85% 55%',
+      primaryLight: '320 90% 65%',
+      primaryDark: '310 80% 45%',
+      accent: '340 85% 60%',
+      accentLight: '345 90% 70%',
+      success: '150 70% 45%',
+      successLight: '155 75% 60%',
+      warning: '45 95% 50%',
+    }
   }
 ];
 
@@ -120,22 +218,32 @@ export const layoutOptions: LayoutOption[] = [
   {
     id: 'default',
     name: 'Classic Cards',
-    description: 'Traditional card-based layout with clean spacing'
+    description: 'Traditional card-based layout with clean spacing and shadows'
   },
   {
     id: 'compact',
     name: 'Compact View',
-    description: 'Tighter spacing for more content on screen'
+    description: 'Tighter spacing to fit more content on your screen'
   },
   {
     id: 'sidebar',
-    name: 'Sidebar Navigation',
-    description: 'Navigation panel on the side for quick access'
+    name: 'Sidebar Layout',
+    description: 'Side navigation panel for quick access to all features'
   },
   {
     id: 'minimal',
     name: 'Minimal Focus',
-    description: 'Clean, distraction-free design for better focus'
+    description: 'Clean, distraction-free design with minimal shadows'
+  },
+  {
+    id: 'spacious',
+    name: 'Spacious View',
+    description: 'Extra breathing room with larger spacing between elements'
+  },
+  {
+    id: 'cozy',
+    name: 'Cozy Mode',
+    description: 'Warm, rounded design with softer colors and edges'
   }
 ];
 

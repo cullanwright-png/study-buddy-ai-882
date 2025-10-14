@@ -138,6 +138,8 @@
   }
 
   /* Layout-specific styles */
+  
+  /* Compact Layout */
   body.layout-compact .space-y-6 > * + * {
     margin-top: 1rem !important;
   }
@@ -154,6 +156,15 @@
     padding: 0.75rem !important;
   }
 
+  body.layout-compact .gap-6 {
+    gap: 1rem !important;
+  }
+
+  body.layout-compact .gap-8 {
+    gap: 1.5rem !important;
+  }
+
+  /* Minimal Layout */
   body.layout-minimal .shadow-soft,
   body.layout-minimal .shadow-medium,
   body.layout-minimal .shadow-strong {
@@ -164,7 +175,61 @@
     border: 1px solid hsl(var(--border) / 0.3) !important;
   }
   
-  body.layout-minimal .bg-gradient-to-br {
+  body.layout-minimal .bg-gradient-to-br,
+  body.layout-minimal .bg-gradient-primary,
+  body.layout-minimal .bg-gradient-accent,
+  body.layout-minimal .bg-gradient-success {
     background: hsl(var(--card)) !important;
+  }
+
+  /* Spacious Layout */
+  body.layout-spacious .space-y-6 > * + * {
+    margin-top: 2rem !important;
+  }
+  
+  body.layout-spacious .space-y-8 > * + * {
+    margin-top: 3rem !important;
+  }
+  
+  body.layout-spacious .p-4 {
+    padding: 1.5rem !important;
+  }
+  
+  body.layout-spacious .p-6 {
+    padding: 2rem !important;
+  }
+
+  body.layout-spacious .gap-4 {
+    gap: 1.5rem !important;
+  }
+
+  body.layout-spacious .gap-6 {
+    gap: 2rem !important;
+  }
+
+  body.layout-spacious .gap-8 {
+    gap: 3rem !important;
+  }
+
+  /* Cozy Layout */
+  body.layout-cozy .rounded-lg {
+    border-radius: 1.5rem !important;
+  }
+  
+  body.layout-cozy .rounded-xl {
+    border-radius: 2rem !important;
+  }
+  
+  body.layout-cozy .rounded-2xl {
+    border-radius: 2.5rem !important;
+  }
+
+  body.layout-cozy * {
+    --tw-shadow-color: hsl(var(--primary) / 0.15);
+  }
+
+  body.layout-cozy .bg-card,
+  body.layout-cozy .bg-background {
+    filter: brightness(0.98) saturate(1.05);
   }
 }
