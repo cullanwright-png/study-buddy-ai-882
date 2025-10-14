@@ -46,7 +46,7 @@ const Settings: React.FC = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="canvas" className="space-y-8">
+      <Tabs defaultValue="appearance" className="space-y-8">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="canvas" className="flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
