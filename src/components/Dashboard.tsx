@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, Target, BookOpen, Brain, Heart } from 'lucide-react';
-import heroImage from '@/assets/hero-students.jpg';
 
 interface DashboardProps {
   onNavigate: (section: string) => void;
@@ -35,41 +34,32 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       <div className="relative bg-gradient-hero overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative container mx-auto px-4 py-16">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-white z-10">
-              <h1 className="text-5xl font-bold mb-4 leading-tight">
-                Welcome back, <span className="text-accent-light">Student</span>!
-              </h1>
-              <p className="text-xl mb-6 text-white/90">
-                Ready to crush today's goals? You're on a {stats.streakDays}-day study streak! 
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button 
-                  variant="secondary" 
-                  size="lg"
-                  onClick={() => onNavigate('pomodoro')}
-                  className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-                >
-                  <Clock className="mr-2 h-5 w-5" />
-                  Start Study Session
-                </Button>
-                <Button 
-                  variant="secondary" 
-                  size="lg"
-                  onClick={() => onNavigate('assignments')}
-                  className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-                >
-                  <Calendar className="mr-2 h-5 w-5" />
-                  View Assignments
-                </Button>
-              </div>
-            </div>
-            <div className="hidden lg:block">
-              <img 
-                src={heroImage} 
-                alt="Students studying together" 
-                className="rounded-2xl shadow-strong"
-              />
+          <div className="text-center text-white z-10 max-w-3xl mx-auto">
+            <h1 className="text-5xl font-bold mb-4 leading-tight">
+              Welcome back, <span className="text-accent-light">Student</span>!
+            </h1>
+            <p className="text-xl mb-6 text-white/90">
+              Ready to crush today's goals? You're on a {stats.streakDays}-day study streak! 
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button 
+                variant="secondary" 
+                size="lg"
+                onClick={() => onNavigate('pomodoro')}
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+              >
+                <Clock className="mr-2 h-5 w-5" />
+                Start Study Session
+              </Button>
+              <Button 
+                variant="secondary" 
+                size="lg"
+                onClick={() => onNavigate('assignments')}
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+              >
+                <Calendar className="mr-2 h-5 w-5" />
+                View Assignments
+              </Button>
             </div>
           </div>
         </div>
