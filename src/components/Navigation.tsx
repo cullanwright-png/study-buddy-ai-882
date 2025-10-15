@@ -12,11 +12,18 @@ import {
   Menu,
   X,
   GraduationCap,
-  LogOut
+  HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface NavigationProps {
   currentSection: string;
@@ -25,24 +32,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-
-  const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      
-      toast({
-        title: 'Signed out successfully',
-        description: 'See you next time!',
-      });
-    } catch (error: any) {
-      toast({
-        title: 'Error signing out',
-        description: error.message,
-        variant: 'destructive',
-      });
-    }
-  };
+  const [isHelpOpen, setIsHelpOpen] = React.useState(false);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, badge: null },
@@ -112,17 +102,119 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
               })}
             </div>
 
-            {/* User Profile */}
+            {/* Help Button */}
             <div className="flex items-center space-x-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSignOut}
-                className="hover:bg-destructive/10 hover:text-destructive"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
+              <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="hover:bg-primary/10 hover:text-primary"
+                  >
+                    <HelpCircle className="w-4 h-4 mr-2" />
+                    Help
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl">Welcome to StudyBuddy!</DialogTitle>
+                    <DialogDescription>
+                      Your complete academic companion for managing assignments, studying efficiently, and tracking your progress.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <ScrollArea className="max-h-[60vh] pr-4">
+                    <div className="space-y-6">
+                      {/* Features Section */}
+                      <div>
+                        <h3 className="font-semibold text-lg mb-3">Features</h3>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="font-medium text-sm flex items-center gap-2">
+                              <Home className="w-4 h-4 text-primary" />
+                              Dashboard
+                            </p>
+                            <p className="text-sm text-muted-foreground ml-6">Your home base with an overview of upcoming assignments, study streaks, and quick stats.</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm flex items-center gap-2">
+                              <Calendar className="w-4 h-4 text-primary" />
+                              Assignments
+                            </p>
+                            <p className="text-sm text-muted-foreground ml-6">Track all your assignments, mark them complete, and never miss a deadline.</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-primary" />
+                              Study Timer
+                            </p>
+                            <p className="text-sm text-muted-foreground ml-6">Use the Pomodoro technique to study in focused 25-minute intervals with breaks.</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm flex items-center gap-2">
+                              <GraduationCap className="w-4 h-4 text-primary" />
+                              Grades
+                            </p>
+                            <p className="text-sm text-muted-foreground ml-6">View all your grades synced from Canvas and track your academic performance.</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm flex items-center gap-2">
+                              <BarChart3 className="w-4 h-4 text-primary" />
+                              Progress
+                            </p>
+                            <p className="text-sm text-muted-foreground ml-6">Visualize your study patterns, assignment completion rates, and productivity trends.</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm flex items-center gap-2">
+                              <Heart className="w-4 h-4 text-primary" />
+                              Motivation
+                            </p>
+                            <p className="text-sm text-muted-foreground ml-6">Daily motivational quotes and encouragement to keep you inspired.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Canvas Integration Section */}
+                      <div className="pt-4 border-t">
+                        <h3 className="font-semibold text-lg mb-3">Linking Your Canvas Account</h3>
+                        <div className="space-y-3 text-sm">
+                          <p className="text-muted-foreground">
+                            Connect your Canvas LMS account to automatically sync your assignments and grades:
+                          </p>
+                          <ol className="space-y-2 ml-4 list-decimal text-muted-foreground">
+                            <li>Go to the <strong className="text-foreground">Customize</strong> section in the navigation</li>
+                            <li>Find the <strong className="text-foreground">Canvas Integration</strong> card</li>
+                            <li>Enter your Canvas institution URL (e.g., school.instructure.com)</li>
+                            <li>Generate an API token from your Canvas account:
+                              <ul className="ml-6 mt-1 list-disc">
+                                <li>Go to Canvas → Account → Settings</li>
+                                <li>Scroll to "Approved Integrations"</li>
+                                <li>Click "+ New Access Token"</li>
+                                <li>Copy the token and paste it into StudyBuddy</li>
+                              </ul>
+                            </li>
+                            <li>Click <strong className="text-foreground">Save Settings</strong></li>
+                            <li>Use the <strong className="text-foreground">Sync Now</strong> button to fetch your latest data</li>
+                          </ol>
+                          <p className="text-muted-foreground mt-3">
+                            Once connected, your assignments and grades will automatically appear in the app!
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tips Section */}
+                      <div className="pt-4 border-t">
+                        <h3 className="font-semibold text-lg mb-3">Pro Tips</h3>
+                        <ul className="space-y-2 text-sm text-muted-foreground ml-4 list-disc">
+                          <li>Use the floating timer to keep your Pomodoro session visible while working on other tabs</li>
+                          <li>Check your dashboard daily to stay on top of upcoming deadlines</li>
+                          <li>Sync Canvas regularly to ensure your assignments are up to date</li>
+                          <li>Build a study streak to stay motivated and consistent</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ScrollArea>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
@@ -201,15 +293,18 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
               })}
               
               <div className="pt-4 border-t border-border">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSignOut}
-                  className="w-full justify-start h-12 hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <LogOut className="w-5 h-5 mr-3" />
-                  Sign Out
-                </Button>
+                <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start h-12 hover:bg-primary/10 hover:text-primary"
+                    >
+                      <HelpCircle className="w-5 h-5 mr-3" />
+                      Help
+                    </Button>
+                  </DialogTrigger>
+                </Dialog>
               </div>
             </div>
           </div>
