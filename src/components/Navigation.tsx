@@ -51,7 +51,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-soft">
+      <nav className="hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-white/95 backdrop-blur-sm border-b border-border shadow-soft">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -60,10 +60,10 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
                 <Brain className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold text-gray-900">
                   StudyBuddy
                 </h1>
-                <p className="text-xs text-muted-foreground">Your Academic Companion</p>
+                <p className="text-xs text-gray-600">Your Academic Companion</p>
               </div>
             </div>
 
@@ -83,7 +83,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
                       "relative h-10 px-4 transition-all",
                       isActive 
                         ? "bg-gradient-primary text-white shadow-soft" 
-                        : "hover:bg-muted/50"
+                        : "text-gray-900 hover:bg-gray-100"
                     )}
                   >
                     <Icon className="w-4 h-4 mr-2" />
@@ -124,9 +124,9 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
               <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
                 <DialogTrigger asChild>
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    className="hover:bg-primary/10 hover:text-primary"
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-900 hover:bg-gray-100"
                   >
                     <HelpCircle className="w-4 h-4 mr-2" />
                     Help
@@ -238,7 +238,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
       </nav>
 
       {/* Mobile Navigation */}
-      <nav className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-soft">
+      <nav className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-white/95 backdrop-blur-sm border-b border-border shadow-soft">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -246,7 +246,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
               <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
                 <Brain className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-lg font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="text-lg font-bold text-gray-900">
                 StudyBuddy
               </h1>
             </div>
@@ -268,7 +268,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
 
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-white border-b border-border shadow-medium">
+          <div className="absolute top-16 left-0 right-0 bg-white dark:bg-white border-b border-border shadow-medium">
             <div className="container mx-auto px-4 py-4 space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -287,7 +287,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
                       "w-full justify-start h-12",
                       isActive 
                         ? "bg-gradient-primary text-white" 
-                        : ""
+                        : "text-gray-900"
                     )}
                   >
                     <Icon className="w-5 h-5 mr-3" />
@@ -314,7 +314,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
                   variant="ghost"
                   size="sm"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="w-full justify-start h-12 hover:bg-primary/10 hover:text-primary"
+                  className="w-full justify-start h-12 text-gray-900 hover:bg-gray-100"
                 >
                   {theme === 'dark' ? (
                     <Sun className="w-5 h-5 mr-3" />
@@ -328,7 +328,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-full justify-start h-12 hover:bg-primary/10 hover:text-primary"
+                      className="w-full justify-start h-12 text-gray-900 hover:bg-gray-100"
                     >
                       <HelpCircle className="w-5 h-5 mr-3" />
                       Help
