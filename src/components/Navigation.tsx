@@ -12,8 +12,11 @@ import {
   Menu,
   X,
   GraduationCap,
-  HelpCircle
+  HelpCircle,
+  Moon,
+  Sun
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import {
   Dialog,
@@ -33,6 +36,7 @@ interface NavigationProps {
 const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isHelpOpen, setIsHelpOpen] = React.useState(false);
+  const { theme, setTheme } = useTheme();
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, badge: null },
@@ -102,8 +106,21 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
               })}
             </div>
 
-            {/* Help Button */}
+            {/* Dark Mode Toggle & Help Button */}
             <div className="flex items-center space-x-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="hover:bg-primary/10 hover:text-primary"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-4 h-4 mr-2" />
+                ) : (
+                  <Moon className="w-4 h-4 mr-2" />
+                )}
+                {theme === 'dark' ? 'Light' : 'Dark'}
+              </Button>
               <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
                 <DialogTrigger asChild>
                   <Button
@@ -292,7 +309,20 @@ const Navigation: React.FC<NavigationProps> = ({ currentSection, onNavigate }) =
                 );
               })}
               
-              <div className="pt-4 border-t border-border">
+              <div className="pt-4 border-t border-border space-y-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="w-full justify-start h-12 hover:bg-primary/10 hover:text-primary"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="w-5 h-5 mr-3" />
+                  ) : (
+                    <Moon className="w-5 h-5 mr-3" />
+                  )}
+                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                </Button>
                 <Dialog open={isHelpOpen} onOpenChange={setIsHelpOpen}>
                   <DialogTrigger asChild>
                     <Button
